@@ -2,7 +2,7 @@
   <div id="app">
     <!-- topbar -->
     <div class="topbar box-shadow">
-      <div class="menu-box small-button" ref="menubox" @click="showPopup" :class="{'active':show}">
+      <div class="menu-box small-button" ref="menubox" @click="showPopup" :class="{ 'active': show }">
         <!-- 图标按钮 -->
         <div class="menu-button">
           <div class="line-box">
@@ -22,13 +22,41 @@
 
     <van-popup v-model="show" position="left" :style="{ width: '15%', height: '100%' }" class="box-shadow"
       overlay-class="v-overlay ">
-      <van-sidebar v-model="activeKey" @change="indexchange">
+      <!-- <van-sidebar v-model="activeKey" @change="indexchange">
         <van-sidebar-item title="首页" @click="tohome" class="widtht-100" />
         <van-sidebar-item title="21" to="/newrank" />
         <van-sidebar-item title="20" to="/oldrank" />
         <van-sidebar-item title="记录" @click="tomyrecord" />
         <van-sidebar-item title="聊天" @click="tochartroom" />
-      </van-sidebar>
+      </van-sidebar> -->
+      <nav class="shell light">
+        <div  class="shell__item" @click="tohome">
+          <i class="shell__icon fas fa-home"></i>
+          <span class="shell__title">Home</span>
+        </div>
+        <div  class="shell__item" @click="torank(21)">
+          <i class="shell__icon fas fa-list"></i>
+          <span class="shell__title">21</span>
+        </div>
+        
+        <div  class="shell__item" @click="torank(20)">
+          <i class="shell__icon fas fa-magic"></i>
+          <span class="shell__title">20</span>
+        </div>
+        <div  class="shell__item" @click="tomyrecord">
+          <i class="shell__icon fas fa-wallet"></i>
+          <span class="shell__title">Record</span>
+        </div>
+        <div  class="shell__item" @click="tochartroom">
+          <i class="shell__icon fas fa-wallet"></i>
+          <span class="shell__title">Chat</span>
+        </div>
+        <!-- <a href="#" class="shell__item"><i class="shell__icon fas fa-image"></i><span class="shell__title">Image</span></a>
+        <a href="#" class="shell__item"><i class="shell__icon fas fa-qrcode"></i><span class="shell__title">QRCode</span></a>
+        <a href="#" class="shell__item"><i class="shell__icon fas fa-shield-alt"></i><span class="shell__title">Secure</span></a>
+        <a href="#" class="shell__item"><i class="shell__icon fas fa-bug"></i><span class="shell__title">Bug</span></a> -->
+      </nav>
+
     </van-popup>
   </div>
 </template>
@@ -57,7 +85,6 @@ export default {
     },
     indexchange(index) {
       this.show = !this.show
-      console.log(index);
     },
     tochartroom() {
       if (this.$store.state.status == 1) {
@@ -79,6 +106,14 @@ export default {
       } else {
         this.$router.push("/home-login")
       }
+    },
+    torank(grade){
+      if(grade==21){
+        this.$router.push("/newrank")
+      }else if(grade==20){
+        this.$router.push("/oldrank")
+      }
+      
     },
     showPopup() {
       this.show = true
@@ -275,4 +310,88 @@ export default {
 
 //按钮样式
 //topbar 样式
+
+//侧边导航栏样式
+.light {
+  --shell-bg-color: #f3f4f6;
+  --item-bg-color: #d1d5db;
+  --item-hover-txt-color: #f19f9f;
+  --item-txt-color: #000;
+}
+
+:root {
+  --shell-bg-color: #312e81;
+  --item-bg-color: #4338ca;
+  --item-hover-txt-color: #312e81;
+  --item-txt-color: #8c78f0;
+}
+
+.shell {
+  /* width: 100px; */
+  width: 100%;
+  height: 100%;
+  background-color: var(--shell-bg-color);
+  // border-radius: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  transition: .3s;
+  overflow: hidden;
+}
+
+
+
+
+.shell__item {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 85%;
+  height: 10%;
+  margin: 9px;
+  border-radius: 10px;
+  position: relative;
+  transition: .3s;
+  color: var(--item-txt-color);
+}
+
+
+/* .shell__item:nth-child(1)::before,
+.shell__item:nth-child(5)::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--item-bg-color);
+    position: absolute;
+    bottom: -10px;
+} */
+
+.shell__item:hover {
+  background-color: var(--item-bg-color);
+  color: var(--item-hover-txt-color);
+}
+.shell_selected {
+    background-color: var(--item-bg-color);
+    color: var(--item-hover-txt-color);
+}
+.shell__icon {
+  line-height: 40px;
+  font-size: 40px;
+  font-weight: bold;
+  position: absolute;
+  margin-left: .5em;
+}
+
+.shell__title {
+  position: relative;
+  left: 4em;
+  font-size: 20px;
+  font-weight: bold;
+  opacity: 0;
+  transition: .1s;
+  opacity: 1;
+}
+
+//侧边导航栏样式
 </style>
