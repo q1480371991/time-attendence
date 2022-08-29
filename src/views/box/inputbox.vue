@@ -43,6 +43,7 @@ export default{
     outline: none;
     /* 这个属性是告诉浏览器：你想要设置的边框和内边距的值是包含在总宽高内的 */
     box-sizing: border-box;
+    font-family:"阿里巴巴普惠体 2.0 45 Light" ;
 }
 .add{
     background-color: transparent;

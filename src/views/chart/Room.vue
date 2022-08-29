@@ -297,7 +297,12 @@ export default {
   background-color: #909399;
 }
 
+* {
+  padding: 0;
+  margin: 0;
+  font-family:"阿里巴巴普惠体 2.0 45 Light" ;
 
+}
 
 .Room {
 

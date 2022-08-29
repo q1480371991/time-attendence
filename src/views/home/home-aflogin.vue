@@ -264,6 +264,12 @@ export default {
 
 
 <style lang="less" scoped>
+    * {
+  padding: 0;
+  margin: 0;
+  font-family:"阿里巴巴普惠体 2.0 45 Light" ;
+
+}
 //提示css
 .erro-color {
     background-color: #f34135 !important;

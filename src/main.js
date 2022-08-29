@@ -6,6 +6,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './store';
 
+//引入图标
+import '@/assets/icons/iconfont/iconfont.css'
+//引入字体
+import '@/assets/css/text.css'
 
 
 //全部引入vant

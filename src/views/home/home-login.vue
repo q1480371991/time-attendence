@@ -223,9 +223,15 @@ export default {
 
 
 <style lang="less" scoped>
+* {
+  padding: 0;
+  margin: 0;
+  font-family:"阿里巴巴普惠体 2.0 45 Light" ;
+
+}
 html,
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', miui, 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+    font-family:"阿里巴巴普惠体 2.0 45 Light" ;
     margin: 0;
     font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
 }

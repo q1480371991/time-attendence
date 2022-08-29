@@ -2,6 +2,7 @@
   <div id="app">
     <!-- topbar -->
     <div class="topbar box-shadow">
+      
       <div class="menu-box small-button" ref="menubox" @click="showPopup" :class="{ 'active': show }">
         <!-- 图标按钮 -->
         <div class="menu-button">
@@ -22,39 +23,29 @@
 
     <van-popup v-model="show" position="left" :style="{ width: '15%', height: '100%' }" class="box-shadow"
       overlay-class="v-overlay ">
-      <!-- <van-sidebar v-model="activeKey" @change="indexchange">
-        <van-sidebar-item title="首页" @click="tohome" class="widtht-100" />
-        <van-sidebar-item title="21" to="/newrank" />
-        <van-sidebar-item title="20" to="/oldrank" />
-        <van-sidebar-item title="记录" @click="tomyrecord" />
-        <van-sidebar-item title="聊天" @click="tochartroom" />
-      </van-sidebar> -->
-      <nav class="shell light">
-        <div  class="shell__item" @click="tohome">
-          <i class="shell__icon fas fa-home"></i>
+      <nav class="shell light ">
+        <div  class="shell__item " @click="tohome" :class="{'shell_selected':activeKey==1?true:false}">
+          <i class="shell__icon  iconfont icon-home"></i>
+          
           <span class="shell__title">Home</span>
         </div>
-        <div  class="shell__item" @click="torank(21)">
-          <i class="shell__icon fas fa-list"></i>
+        <div  class="shell__item" @click="torank(21) " :class="{'shell_selected':activeKey==2?true:false}">
+          <i class="shell__icon iconfont icon-rank"></i>
           <span class="shell__title">21</span>
         </div>
         
-        <div  class="shell__item" @click="torank(20)">
-          <i class="shell__icon fas fa-magic"></i>
+        <div  class="shell__item" @click="torank(20)" :class="{'shell_selected':activeKey==3?true:false}">
+          <i class="shell__icon iconfont icon-rank"></i>
           <span class="shell__title">20</span>
         </div>
-        <div  class="shell__item" @click="tomyrecord">
-          <i class="shell__icon fas fa-wallet"></i>
+        <div  class="shell__item" @click="tomyrecord" :class="{'shell_selected':activeKey==4?true:false}">
+          <i class="shell__icon iconfont icon-record"></i>
           <span class="shell__title">Record</span>
         </div>
-        <div  class="shell__item" @click="tochartroom">
-          <i class="shell__icon fas fa-wallet"></i>
+        <div  class="shell__item" @click="tochartroom" :class="{'shell_selected':activeKey==5?true:false}">
+          <i class="shell__icon iconfont icon-chat"></i>
           <span class="shell__title">Chat</span>
         </div>
-        <!-- <a href="#" class="shell__item"><i class="shell__icon fas fa-image"></i><span class="shell__title">Image</span></a>
-        <a href="#" class="shell__item"><i class="shell__icon fas fa-qrcode"></i><span class="shell__title">QRCode</span></a>
-        <a href="#" class="shell__item"><i class="shell__icon fas fa-shield-alt"></i><span class="shell__title">Secure</span></a>
-        <a href="#" class="shell__item"><i class="shell__icon fas fa-bug"></i><span class="shell__title">Bug</span></a> -->
       </nav>
 
     </van-popup>
@@ -69,7 +60,7 @@ export default {
   data() {
     return {
       show: false,
-      activeKey: 0
+      activeKey: 1,
     }
   },
   components:
@@ -83,11 +74,10 @@ export default {
       this.show = val;
 
     },
-    indexchange(index) {
-      this.show = !this.show
-    },
+    
     tochartroom() {
       if (this.$store.state.status == 1) {
+        this.activeKey=5
         this.$router.push("/chart")
       } else {
         alert("请先签到")
@@ -95,12 +85,14 @@ export default {
     },
     tomyrecord() {
       if (this.$store.state.status == 1) {
+        this.activeKey=4
         this.$router.push("/record")
       } else {
         alert("请先签到")
       }
     },
     tohome() {
+      this.activeKey=1
       if (this.$store.state.status == 1) {
         this.$router.push("/home-aflogin")
       } else {
@@ -109,8 +101,10 @@ export default {
     },
     torank(grade){
       if(grade==21){
+        this.activeKey=2
         this.$router.push("/newrank")
       }else if(grade==20){
+        this.activeKey=3
         this.$router.push("/oldrank")
       }
       
@@ -132,7 +126,13 @@ export default {
 
 
 
-
+.icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+    }
 
 
 
@@ -140,6 +140,7 @@ export default {
 * {
   padding: 0;
   margin: 0;
+  font-family:"阿里巴巴普惠体 2.0 45 Light" ;
 
 }
 
