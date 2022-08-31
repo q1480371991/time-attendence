@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         studentid: "",
         id: "",
         name: "",
+        starttime: "",
     },
     mutations: {
         loginrecord(state, datalist) {
@@ -16,8 +17,7 @@ const store = new Vuex.Store({
             state.studentid = datalist.studentid;
             state.id = datalist.id;
             state.name = datalist.name;
-
-
+            state.starttime = datalist.startTime;
         },
         logoutrecord(state) {
             state.status = 0;

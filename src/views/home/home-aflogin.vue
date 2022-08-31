@@ -1,15 +1,15 @@
 <template>
     <div>
-        <van-dialog v-model="show" message="12" closeOnClickOverlay confirmButtonColor="#8cc5ff" >
+        <van-dialog v-model="show" message="12" closeOnClickOverlay confirmButtonColor="#8cc5ff">
             <div class="dialog-box">
                 <div class="top-box">
                     <div class="word-box">签到成功</div>
                 </div>
                 <div class="body-box">
-                    <div class="first-box">学号：{{ tipstudentid }}</div>
-                    <div>姓名：{{ tipname }}</div>
-                    <div>签到开始时间：{{ tipstarttime }}</div>
-                    <div class="last-box">本周签到总时长：{{ tipweektime }}</div>
+                    <div class="first-box">学号：{{  tipstudentid  }}</div>
+                    <div>姓名：{{  tipname  }}</div>
+                    <div>签到开始时间：{{  tipstarttime  }}</div>
+                    <div class="last-box">本周签到总时长：{{  tipweektime  }}</div>
                 </div>
             </div>
         </van-dialog>
@@ -19,11 +19,11 @@
                     <div class="word-box">签退成功</div>
                 </div>
                 <div class="body-box">
-                    <div class="first-box">学号：{{ tipstudentid }}</div>
-                    <div>姓名：{{ tipname }}</div>
-                    <div>签到结束时间：{{ tipendtime }}</div>
-                    <div>本次签到总时长：{{ tiprecordtime }}</div>
-                    <div class="last-box">本周签到总时长：{{ tipweektime }}</div>
+                    <div class="first-box">学号：{{  tipstudentid  }}</div>
+                    <div>姓名：{{  tipname  }}</div>
+                    <div>签到结束时间：{{  tipendtime  }}</div>
+                    <div>本次签到总时长：{{  tiprecordtime  }}</div>
+                    <div class="last-box">本周签到总时长：{{  tipweektime  }}</div>
                 </div>
             </div>
         </van-dialog>
@@ -33,7 +33,7 @@
                     <div class="word-box ">签到失败</div>
                 </div>
                 <div class="body-box">
-                    <div class="first-box">{{ tipmsg }}</div>
+                    <div class="first-box">{{  tipmsg  }}</div>
 
                     <div class="last-box"></div>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="word-box ">签退失败</div>
                 </div>
                 <div class="body-box">
-                    <div class="first-box">{{ tipmsg }}</div>
+                    <div class="first-box">{{  tipmsg  }}</div>
 
                     <div class="last-box"></div>
                 </div>
@@ -58,9 +58,9 @@
                 </div>
                 <div class="font-statu right-box">
                     <div class="font-loginstatus ">已签到</div>
-                    <div class="margin-top">学号:{{ currentstudentid }}</div>
-                    <div class="margin-top">姓名:{{ currentname }}</div>
-                    <div class="margin-top">时间:{{ currentstartTime }}</div>
+                    <div class="margin-top">学号:{{  currentstudentid  }}</div>
+                    <div class="margin-top">姓名:{{  currentname  }}</div>
+                    <div class="margin-top">时间:{{  currentstartTime  }}</div>
                 </div>
             </div>
             <Inputbox class="add" @datachange="setdata" :msg="currentstudentid"></Inputbox>
@@ -71,10 +71,10 @@
             </div>
 
             <div class="online-box">
-                <div class="box-h">当前在教室的人数:{{ onlinelist.length }}</div>
+                <div class="box-h">当前在教室的人数:{{  onlinelist.length  }}</div>
                 <div class="show-box">
                     <el-table :data="onlinelist.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
-                        style="width: 100%">
+                        style="width: 100%" :row-class-name="tableRowClassName">
                         <el-table-column prop="studentid" label="学号" min-width="180" align="center">
                         </el-table-column>
                         <el-table-column prop="name" label="姓名" min-width="180" align="center">
@@ -85,7 +85,12 @@
                         <el-table-column prop="startTime" label="签到时间" min-width="180" align="center">
                         </el-table-column>
                         <el-table-column label="操作" min-width="180" align="center">
-                            举报
+                            <template slot-scope="scope">
+                                <el-button type="text" @click="open(scope.$index)">
+                                    <van-button type="warning">举报</van-button>
+                                </el-button>
+                            </template>
+
                         </el-table-column>
                     </el-table>
                 </div>
@@ -110,7 +115,7 @@ import Inputbox from '../box/inputbox.vue';
 import bus from '@/eventBus/eventBus.js'
 import request from '@/utils/request.js'
 import { loginorlogout } from '@/api/userserviseAPI.js'
-
+// import report from '@/api/reportAPI'
 export default {
     name: "home-aflogin",
     data() {
@@ -128,7 +133,7 @@ export default {
             show2: false,
             show3: false,
             isto: false,
-            isuse:true,
+            isuse: true,
 
 
 
@@ -146,40 +151,32 @@ export default {
     },
 
     async created() {
-        this.currentstudentid = this.$route.params.studentid
-        this.currentid = this.$route.params.id
-        this.currentname = this.$route.params.name
-        this.currentstartTime = this.$route.params.starttime
-
-        this.tipstudentid=this.currentstudentid
-        // let that=this
-        // bus.$off('share-login')
-        // bus.$on('share-login', val => {
-        //     // console.log("this:",this);
-        //     // console.log("that:",that);
-        //     console.log(val);
-        //     this.studentid = val.studentid;
-        //     this.id = val.id
-        //     this.currentname = val.name
-        //     this.startTime = val.starttime
-        // })
-
-
-
-        //当前在教室人数
-        const { data: res } = await request.get('/showonline')
-        this.onlinelist = res.data
-        // console.log( res);
+        this.init();
     },
     beforeDestroy() {
-        this.isto=false;
-        this.isuse=false;
+        this.isto = false;
+        this.isuse = false;
     },
     methods: {
+        async init() {
+            this.currentstudentid = this.$store.state.studentid
+            this.currentid = this.$store.state.id
+            this.currentname = this.$store.state.name
+            this.currentstartTime = this.$store.state.starttime
+
+            this.tipstudentid = this.currentstudentid
+
+
+
+
+            //当前在教室人数
+            const { data: res } = await request.get('/showonline')
+            this.onlinelist = res.data
+        },
         setdata(val) {
             this.tipstudentid = val;
-            if(this.currentstudentid==val)this.isuse=true;
-            else this.isuse=false;
+            if (this.currentstudentid == val) this.isuse = true;
+            else this.isuse = false;
         },
         handleSizeChange(val) {
             this.pageSize = val;
@@ -234,9 +231,8 @@ export default {
                 console.log(res);
                 if (res.code == 20021) {
                     //签退成功且没有签退
-                    if(this.currentstudentid==this.tipstudentid) 
-                    {
-                        this.isto=true
+                    if (this.currentstudentid == this.tipstudentid) {
+                        this.isto = true
                         this.$store.commit('logoutrecord')
                     }
                     // console.log(res.msg);
@@ -254,7 +250,64 @@ export default {
         },
 
         to() {
-            if(this.isto)this.$router.push("/home-login")
+            if (this.isto) this.$router.push("/home-login")
+        },
+        tableRowClassName({ row, rowIndex }) {
+            //把每一行的索引放进row
+            row.index = rowIndex;
+        },
+        async report(index) {
+            console.log("举报" + this.onlinelist[index].name);
+            // const { data: res } = await request('/test1', {
+            //     method:"post",
+            //     dara: JSON.stringify({
+            //         reportid: this.onlinelist[index].studentid,
+            //         reporterid: this.$store.state.studentid
+            //     }),
+            //     headers: {
+            //         'content-type': 'application/json'
+            //     }
+            // })
+            
+            //不用指定content-type？
+            const { data: res } = await request.post('/report',{
+                reportid: this.onlinelist[index].studentid,
+                reporterid: this.$store.state.studentid
+            })
+            return res
+        },
+        async open(index) {
+            const that =this
+            this.$confirm('此操作将举报' + this.onlinelist[index].name + ', 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                // const { data: res } = await request.post('/showonline')
+                // console.log(res);
+                var type=null;
+                this.report(index).then(res=>{
+                    
+                    if(res.flag==true){
+                        type='success'
+                    }else{
+                        type='error'
+                    }
+                    this.$message({
+                    type: type,
+                    message: res.msg
+                });
+                })
+                
+                that.init()
+                
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消举报'
+                });
+            });
         }
     },
     components: { Inputbox }
@@ -264,12 +317,13 @@ export default {
 
 
 <style lang="less" scoped>
-    * {
-  padding: 0;
-  margin: 0;
-  font-family:"阿里巴巴普惠体 2.0 45 Light" ;
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "阿里巴巴普惠体 2.0 45 Light";
 
 }
+
 //提示css
 .erro-color {
     background-color: #f34135 !important;

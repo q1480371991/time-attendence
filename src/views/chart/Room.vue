@@ -164,8 +164,14 @@ export default {
       console.log(jsonData);
       if (jsonData.systemMsgFlag === true) {
         // 系统消息   用户上线或下线
-        console.log("systemMsgFlag == true");
-        this.onlinelist = jsonData.message
+        if(jsonData.message.type==5)
+        {
+          alert(jsonData.message.message)
+          this.$router.push("/home-login")
+        }else{
+          this.onlinelist = jsonData.message
+        }
+        
       } else {
         //聊天消息
         if (jsonData.message.type == 1) {

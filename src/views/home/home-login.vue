@@ -206,15 +206,6 @@ export default {
         this.auto()
     },
     destroyed() {
-        // this.studentid, this.id, this.name, this.starttime
-        // bus.$emit('share-login', this.studentid, this.id, this.name, this.starttime)
-        // bus.$emit('share-login', {
-        //     studentid: this.studentid,
-        //     id: this.id,
-        //     name: this.name,
-        //     starttime: this.starttime
-        // })
-
     },
     components: { Inputbox }
 }
