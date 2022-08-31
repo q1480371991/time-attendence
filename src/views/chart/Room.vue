@@ -96,6 +96,8 @@
 <script>
 // import { send } from 'process';
 
+import { clearTimeout } from 'long-timeout';
+
 export default {
   name: 'Room',
   data() {
@@ -117,14 +119,47 @@ export default {
       imgUrl: null,
       isgroup: true,
 
+      //心跳检测机制
+      PING_STRING:"0x9",
+      PONG_STRING:"0xA",
+      lockReconnect:false,
+      timeout:1000*3,
+      serverTimeout:1000*5,
+      sendtimeoutObj:null,
+      serverTimeoutObj:null,
+
 
     }
   },
   methods: {
+    //心跳检测机制
+    start(){
+      var that=this
+      //清空定时器
+      that.sendtimeoutObj&&clearTimeout(this.sendtimeoutObj)
+      that.serverTimeoutObj&&clearTimeout(this.serverTimeoutObj)
 
-    test(){
-      this.ws.close()
+      that.sendtimeoutObj=setTimeout(function(){
+        that.ws.send(PING_STRING)
+        console.log("心跳");
+        that.serverTimeoutObj=setTimeout(function(){
+          that.ws.close
+        },that.serverTimeout)
+      },this.timeout)
     },
+
+    //异常或被关闭后隔60minute进行重连
+    reconnect(){
+      var that=this
+      if(that.lockReconnect)return 
+      that.lockReconnect=true;
+      setTimeout(()=>{
+        that.init();
+        that.lockReconnect=false;
+      },1000*60*1)
+    },
+    //心跳检测机制
+    
 
     count(o) {
       //判断一个数组中有多少个对象的函数
@@ -142,7 +177,6 @@ export default {
     },
     init() {
       this.ws = new WebSocket("ws://localhost:8080/chart");
-
       this.ws.onopen = this.onopen;
       this.ws.onmessage = this.onmessage;
       this.ws.onerror = this.onerror;
@@ -154,6 +188,7 @@ export default {
 
     },
     onopen() {//建立连接后触发
+      this.start();
       console.log("onopen");
     },
     onmessage(evt) {//接收到服务端的推送后触发

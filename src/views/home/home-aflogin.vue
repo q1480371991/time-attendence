@@ -54,7 +54,7 @@
         <div class="container-box">
             <div class="state-box box-shadow">
                 <div class="left-box">
-                    <el-button type="success" icon="el-icon-check" circle class="button-color"></el-button>
+                    <el-button type="success" icon="el-icon-check" circle class="button-color" @click="refresh"></el-button>
                 </div>
                 <div class="font-statu right-box">
                     <div class="font-loginstatus ">已签到</div>
@@ -172,6 +172,9 @@ export default {
             //当前在教室人数
             const { data: res } = await request.get('/showonline')
             this.onlinelist = res.data
+        },
+        refresh(){
+            this.init();
         },
         setdata(val) {
             this.tipstudentid = val;
