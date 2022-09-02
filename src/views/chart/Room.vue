@@ -83,7 +83,7 @@
           </div>
           <label for="file" class="iconfont icon-wenjianjia"></label>
           <input type="file" style="display: none;" id="file" @change="handleFile">
-          <span class="iconfont icon-jietu" @click="test"></span>
+          <span class="iconfont icon-jietu" ></span>
         </div>
         <textarea cols="80" rows="5" @keyup.enter="handelePress" ref="textarea"></textarea>
         <button class="sendMessage" @click="sendContentToServe">发送</button>
@@ -123,8 +123,11 @@ export default {
       PING_STRING:"0x9",
       PONG_STRING:"0xA",
       lockReconnect:false,
-      timeout:1000*3,
-      serverTimeout:1000*5,
+      //每timeout毫秒心跳一次
+      timeout:1000*10,
+
+      //当检测不到心跳反馈 serverTimeout毫秒后，重连
+      serverTimeout:1000*60,
       sendtimeoutObj:null,
       serverTimeoutObj:null,
 
@@ -136,20 +139,22 @@ export default {
     start(){
       var that=this
       //清空定时器
-      that.sendtimeoutObj&&clearTimeout(this.sendtimeoutObj)
-      that.serverTimeoutObj&&clearTimeout(this.serverTimeoutObj)
+      that.sendtimeoutObj&&window.clearTimeout(that.sendtimeoutObj)
+      that.serverTimeoutObj&&window.clearTimeout(that.serverTimeoutObj)
 
       that.sendtimeoutObj=setTimeout(function(){
-        that.ws.send(PING_STRING)
-        console.log("心跳");
+        var sendJson = { "id": that.$store.state.id, "to": null, "from": that.$store.state.studentid, "message": that.PING_STRING, "type": 6, "name": that.$store.state.name, "studentid": that.$store.state.studentid, "time": null, "avatar": "two.jpg" };
+        that.ws.send(JSON.stringify(sendJson))
+        // console.log("心跳");
         that.serverTimeoutObj=setTimeout(function(){
           that.ws.close
         },that.serverTimeout)
-      },this.timeout)
+      },that.timeout)
     },
 
     //异常或被关闭后隔60minute进行重连
     reconnect(){
+      console.log("websocket 正在重新连接");
       var that=this
       if(that.lockReconnect)return 
       that.lockReconnect=true;
@@ -196,8 +201,8 @@ export default {
       var dataStr = evt.data;
       //jsonData 格式举例（需要判断是否是系统消息）：{“systemMsgFlag”: false, "fromName": "YYJ", "message": “你在哪里呀？”}
       var jsonData = JSON.parse(dataStr);
-      console.log(jsonData);
-      if (jsonData.systemMsgFlag === true) {
+      if(jsonData.message.type!=6)console.log(jsonData);
+      if (jsonData.systemMsgFlag === true &&jsonData.message.type!=6) {
         // 系统消息   用户上线或下线
         if(jsonData.message.type==5)
         {
@@ -207,7 +212,7 @@ export default {
           this.onlinelist = jsonData.message
         }
         
-      } else {
+      } else if(jsonData.systemMsgFlag === false &&jsonData.message.type!=6){
         //聊天消息
         if (jsonData.message.type == 1) {
           //群聊消息
@@ -219,18 +224,25 @@ export default {
         }
 
         // console.log("聊天消息");
+      }else if(jsonData.systemMsgFlag === true &&jsonData.message.type==6 &&jsonData.message.message==this.PONG_STRING)
+      {
+        //收到心跳反馈
+        // console.log("心跳反馈");
       }
 
+      //收到消息初始化心跳检测
+      this.start();
     },
     onerror() {//连接建立失败重连
       console.log("onerror");
-      console.log("websocket 正在重新连接");
-      this.init();
       
+      // this.init();
+      this.reconnect()
       
     },
     onclose() {//关闭连接触发
       console.log("onclose");
+      this.reconnect();
     },
 
 
@@ -278,7 +290,6 @@ export default {
       console.log("handleFile");
     },
     handelePress() {
-      console.log("handelePress");
       this.sendContentToServe
     },
     sendContentToServe() {
