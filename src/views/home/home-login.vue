@@ -188,16 +188,16 @@ export default {
         },
         auto(){
             var schedule = require('node-schedule');
+            var that =this
             //禁止打卡
             var j=schedule.scheduleJob({hour:23,minute:30},function(){
                 console.log("schedule");
-                this.istime=true
-                console.log(this.istime);
+                that.istime=true
             })
 
             // 允许打卡
             var j=schedule.scheduleJob({hour:7},function(){
-                this.istime=false
+                that.istime=false
             })
         }
     },
