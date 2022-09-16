@@ -1,7 +1,18 @@
 <template>
   <div class="Room">
     <div class="room-left">
-      <img src="@/assets/avatar/eight.jpg" alt="">
+      <van-popover v-model="showPopover" trigger="click" placement="right" >
+        <van-grid square clickable :border="false" column-num="4" style="width: 300px;height: 240px;">
+          <van-grid-item v-for="(item,index) in avatar" :key="index"  
+          :text=item icon="require('@/assets/avatar/' + item)"   
+          @click="showPopover = false" 
+           />
+        </van-grid>
+        <template #reference>
+          <button ><img :src="require('@/assets/avatar/' + myavatar)" alt=""></button>
+        </template>
+      </van-popover>
+      <!-- <img src="@/assets/avatar/eight.jpg" alt=""> -->
       <p class="iconfont icon-liaotianqingqiu" :class="{ 'active': isgroup === true ? true : false }"
         @click="change(true)"></p>
       <p class="iconfont icon-yonghu" :class="{ 'active': isgroup === false ? true : false }" @click="change(false)">
@@ -14,14 +25,6 @@
       </div>
       <div class="center-b">
         <ul>
-          <!-- <li class="user-item active1" >
-            <img :src="require('@/assets/avatar/' + 'one.jpg')" alt />
-            <span>test1</span>
-          </li>
-          <li class="user-item">
-            <img :src="require('@/assets/avatar/' + 'one.jpg')" alt />
-            <span>test2</span>
-          </li> -->
           <li class="user-item" v-for="(item, index) in onlinelist" :key="item.id"
             :class="{ active1: item.id == currentBranchId }" @click="handeleTabBranch(item.id, index)">
             <img :src="require('@/assets/avatar/' + item.avatar)" alt />
@@ -83,7 +86,7 @@
           </div>
           <label for="file" class="iconfont icon-wenjianjia"></label>
           <input type="file" style="display: none;" id="file" @change="handleFile">
-          <span class="iconfont icon-jietu" ></span>
+          <span class="iconfont icon-jietu"></span>
         </div>
         <textarea cols="80" rows="5" @keyup.enter="handelePress" ref="textarea"></textarea>
         <button class="sendMessage" @click="sendContentToServe">发送</button>
@@ -102,6 +105,10 @@ export default {
   name: 'Room',
   data() {
     return {
+      showPopover: false,
+      avatar: ["one.jpg", "two.jpg", "three.jpg", "four.jpg", "five.jpg", "six.jpg", "seven.jpg", "eight.jpg", "night.jpg"],
+      myavatar:"one.jpg",
+
       isgroup: true,
       currentBranchId: null,
       to: null,
@@ -120,51 +127,55 @@ export default {
       isgroup: true,
 
       //心跳检测机制
-      PING_STRING:"0x9",
-      PONG_STRING:"0xA",
-      lockReconnect:false,
+      PING_STRING: "0x9",
+      PONG_STRING: "0xA",
+      lockReconnect: false,
       //每timeout毫秒心跳一次
-      timeout:1000*10,
+      timeout: 1000 * 10,
 
       //当检测不到心跳反馈 serverTimeout毫秒后，重连
-      serverTimeout:1000*60,
-      sendtimeoutObj:null,
-      serverTimeoutObj:null,
+      serverTimeout: 1000 * 60,
+      sendtimeoutObj: null,
+      serverTimeoutObj: null,
 
 
     }
   },
   methods: {
-    //心跳检测机制
-    start(){
-      var that=this
-      //清空定时器
-      that.sendtimeoutObj&&window.clearTimeout(that.sendtimeoutObj)
-      that.serverTimeoutObj&&window.clearTimeout(that.serverTimeoutObj)
+    changeavatar(index){
+      console.log(index);
+    },
 
-      that.sendtimeoutObj=setTimeout(function(){
+    //心跳检测机制
+    start() {
+      var that = this
+      //清空定时器
+      that.sendtimeoutObj && window.clearTimeout(that.sendtimeoutObj)
+      that.serverTimeoutObj && window.clearTimeout(that.serverTimeoutObj)
+
+      that.sendtimeoutObj = setTimeout(function () {
         var sendJson = { "id": that.$store.state.id, "to": null, "from": that.$store.state.studentid, "message": that.PING_STRING, "type": 6, "name": that.$store.state.name, "studentid": that.$store.state.studentid, "time": null, "avatar": "two.jpg" };
         that.ws.send(JSON.stringify(sendJson))
         // console.log("心跳");
-        that.serverTimeoutObj=setTimeout(function(){
+        that.serverTimeoutObj = setTimeout(function () {
           that.ws.close
-        },that.serverTimeout)
-      },that.timeout)
+        }, that.serverTimeout)
+      }, that.timeout)
     },
 
     //异常或被关闭后隔60minute进行重连
-    reconnect(){
+    reconnect() {
       console.log("websocket 正在重新连接");
-      var that=this
-      if(that.lockReconnect)return 
-      that.lockReconnect=true;
-      setTimeout(()=>{
+      var that = this
+      if (that.lockReconnect) return
+      that.lockReconnect = true;
+      setTimeout(() => {
         that.init();
-        that.lockReconnect=false;
-      },1000*60*1)
+        that.lockReconnect = false;
+      }, 1000 * 60 * 1)
     },
     //心跳检测机制
-    
+
 
     count(o) {
       //判断一个数组中有多少个对象的函数
@@ -201,18 +212,17 @@ export default {
       var dataStr = evt.data;
       //jsonData 格式举例（需要判断是否是系统消息）：{“systemMsgFlag”: false, "fromName": "YYJ", "message": “你在哪里呀？”}
       var jsonData = JSON.parse(dataStr);
-      if(jsonData.message.type!=6)console.log(jsonData);
-      if (jsonData.systemMsgFlag === true &&jsonData.message.type!=6) {
+      if (jsonData.message.type != 6) console.log(jsonData);
+      if (jsonData.systemMsgFlag === true && jsonData.message.type != 6) {
         // 系统消息   用户上线或下线
-        if(jsonData.message.type==5)
-        {
+        if (jsonData.message.type == 5) {
           alert(jsonData.message.message)
           this.$router.push("/home-login")
-        }else{
+        } else {
           this.onlinelist = jsonData.message
         }
-        
-      } else if(jsonData.systemMsgFlag === false &&jsonData.message.type!=6){
+
+      } else if (jsonData.systemMsgFlag === false && jsonData.message.type != 6) {
         //聊天消息
         if (jsonData.message.type == 1) {
           //群聊消息
@@ -224,8 +234,7 @@ export default {
         }
 
         // console.log("聊天消息");
-      }else if(jsonData.systemMsgFlag === true &&jsonData.message.type==6 &&jsonData.message.message==this.PONG_STRING)
-      {
+      } else if (jsonData.systemMsgFlag === true && jsonData.message.type == 6 && jsonData.message.message == this.PONG_STRING) {
         //收到心跳反馈
         // console.log("心跳反馈");
       }
@@ -235,10 +244,10 @@ export default {
     },
     onerror() {//连接建立失败重连
       console.log("onerror");
-      
+
       // this.init();
       this.reconnect()
-      
+
     },
     onclose() {//关闭连接触发
       console.log("onclose");
@@ -314,12 +323,11 @@ export default {
       }
 
     },
-    handeleScrollBottom(){
-      if(this.isgroup)
-      {
+    handeleScrollBottom() {
+      if (this.isgroup) {
         const ul = this.$refs.joinUs1
         ul.scrollTop = ul.scrollHeight
-      }else{
+      } else {
         const ul = this.$refs.joinUs2
         ul.scrollTop = ul.scrollHeight
       }
@@ -327,17 +335,17 @@ export default {
   },
   mouted() {
     console.log("mouted");
-    
+
   },
-  created(){
+  created() {
     console.log("chat room created");
     this.init();
   },
-  destroyed(){
+  destroyed() {
     this.ws.close();
     console.log("chat room destroyed");
   },
-  updated(){
+  updated() {
     this.handeleScrollBottom()
   }
 
@@ -352,7 +360,7 @@ export default {
 * {
   padding: 0;
   margin: 0;
-  font-family:"阿里巴巴普惠体 2.0 45 Light" ;
+  font-family: "阿里巴巴普惠体 2.0 45 Light";
 
 }
 
