@@ -29,14 +29,14 @@
           
           <span class="shell__title">Home</span>
         </div>
-        <div  class="shell__item" @click="torank(21) " :class="{'shell_selected':activeKey==2?true:false}">
+        <div  class="shell__item" @click="torank(22) " :class="{'shell_selected':activeKey==2?true:false}">
           <i class="shell__icon iconfont icon-rank"></i>
-          <span class="shell__title">21</span>
+          <span class="shell__title">22</span>
         </div>
         
-        <div  class="shell__item" @click="torank(20)" :class="{'shell_selected':activeKey==3?true:false}">
+        <div  class="shell__item" @click="torank(21)" :class="{'shell_selected':activeKey==3?true:false}">
           <i class="shell__icon iconfont icon-rank"></i>
-          <span class="shell__title">20</span>
+          <span class="shell__title">21</span>
         </div>
         <div  class="shell__item" @click="tomyrecord" :class="{'shell_selected':activeKey==4?true:false}">
           <i class="shell__icon iconfont icon-record"></i>
@@ -100,10 +100,10 @@ export default {
       }
     },
     torank(grade){
-      if(grade==21){
+      if(grade==22){
         this.activeKey=2
         this.$router.push("/newrank")
-      }else if(grade==20){
+      }else if(grade==21){
         this.activeKey=3
         this.$router.push("/oldrank")
       }

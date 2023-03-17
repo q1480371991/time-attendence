@@ -38,7 +38,7 @@ export default {
     };
   },
   async created() {
-    const { data: res } = await getranktop(20)
+    const { data: res } = await getranktop(21)
     console.log(res);
     // for (var i = 0; i < res.data.length; i++) {
     //   res.data[i].weekTime += "h"
