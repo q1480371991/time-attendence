@@ -10,6 +10,9 @@ const store = new Vuex.Store({
         id: "",
         name: "",
         starttime: "",
+        mycenter: [],
+        in_five_building: false,
+        in_wisdom_valley: false,
     },
     mutations: {
         loginrecord(state, datalist) {
@@ -21,8 +24,16 @@ const store = new Vuex.Store({
         },
         logoutrecord(state) {
             state.status = 0;
-
         },
+        recordposition(state, pos) {
+            state.mycenter[0] = pos.KL;
+            state.mycenter[1] = pos.kT;
+        },
+        recordin(state, data) {
+            console.log(data);
+            state.in_five_building = data[0];
+            state.in_wisdom_valley = data[1];
+        }
     }
 })
 

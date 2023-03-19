@@ -46,6 +46,10 @@
           <i class="shell__icon iconfont icon-chat"></i>
           <span class="shell__title">Chat</span>
         </div>
+        <div  class="shell__item" @click="tomap" :class="{'shell_selected':activeKey==6?true:false}">
+          <i class="shell__icon iconfont icon-chat"></i>
+          <span class="shell__title">Map</span>
+        </div>
       </nav>
 
     </van-popup>
@@ -112,6 +116,10 @@ export default {
     showPopup() {
       this.show = true
     },
+    tomap(){
+      this.activeKey=6
+      this.$router.push("/map")
+    }
   }
 }
 

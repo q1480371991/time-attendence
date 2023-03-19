@@ -7,7 +7,7 @@ import newrank from '@/views/rank/newrank.vue'
 import record from '@/views/record/record.vue'
 import oldrank from '@/views/rank/oldrank.vue'
 import Room from '@/views/chart/Room.vue'
-
+import Map from '@/views/map/map'
 
 
 Vue.use(VueRouter)
@@ -19,7 +19,8 @@ const routes = [
     { path: '/newrank', component: newrank },
     { path: '/oldrank', component: oldrank },
     { path: '/record', component: record },
-    { path: '/chart', component: Room }
+    { path: '/chart', component: Room },
+    { path: '/map', component: Map }
 ]
 
 const router = new VueRouter({

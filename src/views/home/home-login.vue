@@ -98,10 +98,12 @@ export default {
     },
     methods: {
         async login() {
-            if (this.studentid != "") {
+            if(this.$store.state.in_five_building || this.$store.state.in_wisdom_valley){
+                if (this.studentid != "") {
                 const { data: res } = await loginorlogout(true, this.studentid)
                 console.log(res);
-
+                console.log(this.$store.state.in_five_building);
+                console.log(this.$store.state.in_wisdom_valley);
                 if (res.data != null) {
                     this.id = res.data.id;
                     this.name = res.data.name;
@@ -119,13 +121,16 @@ export default {
                     // console.log(res.msg);
                     this.show = !this.show
                     this.$store.commit('loginrecord',res.data)
-                    // console.log(this.$store.state);
+                    //清除定位信息
+                    that.$store.commit('recordin',[false,false]);
                 } else if (res.code == 20050) {
                     //已签到
                     this.islogined = !this.islogined
                     this.$store.commit('loginrecord',res.data)
                     this.isto = true;
                     this.show2 = !this.show2;
+                    //清除定位信息
+                    that.$store.commit('recordin',[false,false]);
                 } else if (res.code == 20070) {
                     //学号不存在
                     this.show2 = !this.show2;
@@ -134,12 +139,14 @@ export default {
             } else {
                 
             }
+            }else{
+                alert("不在规定区域范围内,请先进行定位")
+            }
         },
         async logout() {
-            if (this.studentid != "") {
+            if(this.$store.state.in_five_building || this.$store.state.in_wisdom_valley){
+                if (this.studentid != "") {
                 const { data: res } = await loginorlogout(false, this.studentid)
-
-
                 this.id = res.data.id;
                 this.name = res.data.name;
                 this.starttime = res.data.startTime;
@@ -155,9 +162,13 @@ export default {
                     // console.log(res.msg);
                     
                     this.show1 = !this.show1
+                    //清除定位信息
+                    that.$store.commit('recordin',[false,false]);
                 } else if (res.code == 20060) {
                     //已签退
                     this.show3 = !this.show3;
+                    //清除定位信息
+                    that.$store.commit('recordin',[false,false]);
                 } else if (res.code == 20080) {
                     //学号不存在
                     this.show3 = !this.show3;
@@ -165,6 +176,9 @@ export default {
                 }
             } else {
                 
+            }
+            }else{
+                alert("不在规定区域范围内,请先进行定位")
             }
         },
         setdata(val) {

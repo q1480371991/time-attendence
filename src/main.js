@@ -15,7 +15,7 @@ import '@/assets/css/text.css'
 //全部引入vant
 import Vant from 'vant';
 import 'vant/lib/index.css';
-
+Vue.use(Vant);
 
 // // 引入echarts
 // import 'echarts'
@@ -29,9 +29,17 @@ import 'vant/lib/index.css';
 import * as echarts from "echarts"
 Vue.prototype.$echarts = echarts
 
+//引入高德地图api
+// import AMap from 'vue-amap'
+// Vue.use(AMap)
+// AMap.initAMapApiLoader({
+//     key: 'a3eb62e20382e5d9a40dc502d5da9d9e',
+//     plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.MouseTool', 'AMap.Polygon', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+//     // 默认高德 sdk 版本为 1.4.4
+//     v: '1.4.4'
+// })
 
 
-Vue.use(Vant);
 
 
 
