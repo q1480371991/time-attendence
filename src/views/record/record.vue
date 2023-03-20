@@ -43,8 +43,9 @@ export default {
     }
   },
   async created() {
+      var that=this
       const { data: res } = await request.get('/mytimerecored',{
-      params:{userid:2}
+      params:{userid:that.$store.state.id}
       })
       console.log(res);
       this.recordlist=res.data

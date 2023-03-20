@@ -98,6 +98,7 @@ export default {
     },
     methods: {
         async login() {
+            var that=this
             if(this.$store.state.in_five_building || this.$store.state.in_wisdom_valley){
                 if (this.studentid != "") {
                 const { data: res } = await loginorlogout(true, this.studentid)
@@ -172,7 +173,6 @@ export default {
                 } else if (res.code == 20080) {
                     //学号不存在
                     this.show3 = !this.show3;
-
                 }
             } else {
                 

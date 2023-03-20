@@ -76,7 +76,9 @@
                 if(status=="complete"){
                   //定位成功
                   // 判断 p 是否在 五教
-                  var in_five_building = AMap.GeometryUtil.isPointInRing(pos, that.wisdom_valley1);
+                  console.log(pos);
+                  console.log();
+                  var in_five_building = AMap.GeometryUtil.isPointInRing(pos, that.five_building1);
                   // 判断 p 是否在 智慧谷
                   var in_wisdom_valley = AMap.GeometryUtil.isPointInRing(pos, that.wisdom_valley1);
                   console.log("p 是否在 五教:"+in_five_building);
