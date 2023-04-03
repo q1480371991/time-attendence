@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      pageSize: 3, //每一页显示的数据量 此处每页显示6条数据
+      pageSize: 6, //每一页显示的数据量 此处每页显示6条数据
 
       recordlist: [1],
       currentPage: 1,
@@ -47,7 +47,12 @@ export default {
       const { data: res } = await request.get('/mytimerecored',{
       params:{userid:that.$store.state.id}
       })
-      console.log(res);
+      for(let i =0;i<res.data.length;i++)
+      {
+        if(res.data[i].status==1)res.data[i].status="有效"
+        else if(res.data[i].status==0)res.data[i].status="无效"
+        else res.data[i].status="被举报";
+      }
       this.recordlist=res.data
   },
   methods: {
